@@ -310,6 +310,158 @@ namespace LuaGameObject
         return 0;
     }
 
+    int SetTemporaryPosition(Eluna* E, GameObject* go)
+    {
+        if (go->GetSpawnId() != 0)
+            return luaL_error(E->L, "Method SetTemporaryPosition can only be used on non-persistant gameobject.");
+
+        uint8 i = 2;
+        float posX = go->GetPositionX();
+        float posY = go->GetPositionY();
+        float posZ = go->GetPositionZ();
+        float pitch = 0.0f;
+        float roll = 0.0f;
+        float yaw = go->GetOrientation();
+
+        if (lua_istable(E->L, i)) {
+            lua_rawgeti(E->L, i, 1);
+            if (!lua_isnil(E->L, -1)) posX = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 2);
+            if (!lua_isnil(E->L, -1)) posY = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 3);
+            if (!lua_isnil(E->L, -1)) posZ = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+            i++;
+        }
+
+        if (lua_istable(E->L, i)) {
+            lua_rawgeti(E->L, i, 1);
+            if (!lua_isnil(E->L, -1)) pitch = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 2);
+            if (!lua_isnil(E->L, -1)) roll = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 3);
+            if (!lua_isnil(E->L, -1)) yaw = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+            i++;
+        }
+
+        std::cout << "PosX:" << posX << ", PosY:" << posY << ", PosZ:" << posZ << std::endl;
+        go->Relocate(posX, posY, posZ, yaw);
+        go->SetLocalRotationAngles(yaw, roll, pitch);
+        go->DestroyForNearbyPlayers();
+        go->UpdateObjectVisibility();
+
+        return 0;
+    }
+
+    int SetPosition(Eluna* E, GameObject* go)
+    {
+        uint8 i = 2;
+        float posX = go->GetPositionX();
+        float posY = go->GetPositionY();
+        float posZ = go->GetPositionZ();
+        float pitch = 0.0f;
+        float roll = 0.0f;
+        float yaw = go->GetOrientation();
+
+        if (lua_istable(E->L, i)) {
+            lua_rawgeti(E->L, i, 1);
+            if (!lua_isnil(E->L, -1)) posX = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 2);
+            if (!lua_isnil(E->L, -1)) posY = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 3);
+            if (!lua_isnil(E->L, -1)) posZ = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+            i++;
+        }
+
+        if (lua_istable(E->L, i)) {
+            lua_rawgeti(E->L, i, 1);
+            if (!lua_isnil(E->L, -1)) pitch = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 2);
+            if (!lua_isnil(E->L, -1)) roll = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+
+            lua_rawgeti(E->L, i, 3);
+            if (!lua_isnil(E->L, -1)) yaw = (float)lua_tonumber(E->L, -1);
+            lua_pop(E->L, 1);
+            i++;
+        }
+
+        Map* map = nullptr;
+        if (lua_gettop(E->L) >= i && !lua_isnil(E->L, i))
+            map = E->CHECKOBJ<Map>(i, false);
+        if (!map)
+            map = go->GetMap();
+        
+        ObjectGuid::LowType guidLow = go->GetSpawnId();
+        if (!guidLow)
+            return luaL_error(E->L, "GameObject must be from DB (spawned).");
+
+        GameObjectData const* data = go->GetGameObjectData();
+        if (!data)
+            return luaL_error(E->L, "GameObject has no persistent data.");
+
+        Position pos = { posX, posY, posZ };
+        
+        go->WorldRelocate(map->GetId(), pos);
+        go->Relocate(go->GetPositionX(), go->GetPositionY(), go->GetPositionZ(), yaw);
+        go->SetLocalRotationAngles(yaw, roll, pitch);
+
+        sObjectMgr->RemoveGameobjectFromGrid(guidLow, go->GetGameObjectData());
+        go->SaveToDB();
+        sObjectMgr->AddGameobjectToGrid(guidLow, go->GetGameObjectData());
+
+        go->Delete();
+
+        go = new GameObject();
+        if (!go->LoadFromDB(guidLow, map, true))
+        {
+            delete go;
+            return false;
+        }
+
+        E->Push(go);
+
+        return 1;
+    }
+
+    int SetScale(Eluna* E, GameObject* obj)
+    {
+        float scale = E->CHECKVAL<float>(2);
+
+        if (scale <= 0.0f)
+        {
+            scale = obj->GetGOInfo()->size;
+            const_cast<GameObjectData*>(obj->GetGameObjectData())->size = -1.0f;
+        }
+        else
+        {
+            const_cast<GameObjectData*>(obj->GetGameObjectData())->size = scale;
+        }
+
+        obj->SetObjectScale(scale);
+        obj->DestroyForNearbyPlayers();
+        obj->UpdateObjectVisibility();
+        obj->SaveToDB();
+        
+        return 0;
+    }
+
     ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
@@ -337,7 +489,11 @@ namespace LuaGameObject
         { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
         { "Despawn", &LuaGameObject::Despawn },
         { "Respawn", &LuaGameObject::Respawn },
-        { "SaveToDB", &LuaGameObject::SaveToDB }
+        { "SaveToDB", &LuaGameObject::SaveToDB },
+
+        { "SetTemporaryPosition", &LuaGameObject::SetTemporaryPosition },
+        { "SetPosition", &LuaGameObject::SetPosition },
+        { "SetScale", &LuaGameObject::SetScale }
     };
 };
 #endif

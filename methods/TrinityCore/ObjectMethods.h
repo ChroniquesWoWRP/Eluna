@@ -356,6 +356,7 @@ namespace LuaObject
         float size = E->CHECKVAL<float>(2);
 
         obj->SetObjectScale(size);
+        
         return 0;
     }
 

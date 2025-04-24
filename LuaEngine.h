@@ -69,6 +69,7 @@ class InstanceScript;
 class TempSummon;
 class Vehicle;
 struct ItemTemplate;
+struct CreatureTemplate;
 typedef Battleground BattleGround;
 typedef BattlegroundTypeId BattleGroundTypeId;
 typedef InstanceScript InstanceData;
@@ -77,6 +78,7 @@ class InstanceData;
 struct ItemPrototype;
 struct SpellEntry;
 typedef ItemPrototype ItemTemplate;
+typedef CreaturePrototype CreatureTemplate;
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 
@@ -305,6 +307,14 @@ public:
         ElunaTemplate<T>::Push(this, ptr);
     }
 
+    template<typename T>
+    void PushField(const char* key, T value)
+    {
+        Push(key);
+        Push(value);
+        lua_settable(L, -3);
+    }
+
     /*
      * Returns `true` if Eluna has instance data for `map`.
      */
@@ -406,9 +416,9 @@ public:
     void OnDiscoverArea(Player* player, uint32 area);
     /* ###> Custom ### */
         void OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
-        // bool BeforeOnUnequip(Player* pPlayer, Item* pItem);
-        bool OnBeforeAddItem(Player* pPlayer, uint32 ItemID, uint32 Class, uint32 Subclass);
+        void OnBeforeUnequip(Player* pPlayer, Item* pItem);
         void OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState);
+        void OnDestroyItem(Player* pPlayer, Item* pItem, uint32 count);
     /* ###< Custom ### */
 
     /* Item */

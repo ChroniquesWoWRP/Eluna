@@ -7,6 +7,7 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
+#include "ObjectMgr.h"
 #include "BindingMap.h"
 
 /***
@@ -3144,6 +3145,66 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int GetItemTemplate(Eluna* E)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        if (!entry)
+            return luaL_argerror(E->L, 1, "item entry expected");
+
+        ItemTemplate const* proto = eObjectMgr->GetItemTemplate(entry);
+        if (!proto)
+        {
+            lua_pushnil(E->L);
+            return 1;
+        }
+
+        lua_newtable(E->L);
+        E->PushField("ItemId", proto->ItemId);
+        E->PushField("Class", proto->Class);
+        E->PushField("SubClass", proto->SubClass);
+        E->PushField("Name", proto->Name1);
+        E->PushField("Quality", proto->Quality);
+        E->PushField("BuyCount", proto->BuyCount);
+        E->PushField("BuyPrice", proto->BuyPrice);
+        E->PushField("SellPrice", proto->SellPrice);
+        E->PushField("InventoryType", proto->InventoryType);
+        E->PushField("ItemLevel", proto->ItemLevel);
+        E->PushField("MaxCount", proto->MaxCount);
+        E->PushField("Stackable", proto->Stackable);
+        E->PushField("DamageMin", proto->Damage[0].DamageMin);
+        E->PushField("DamageMax", proto->Damage[0].DamageMax);
+        E->PushField("DamageType", proto->Damage[0].DamageType);
+        E->PushField("Armor", proto->Armor);
+        E->PushField("MaxDurability", proto->MaxDurability);
+
+        return 1;
+    }
+
+    int GetCreatureTemplate(Eluna* E)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        if (!entry)
+            return luaL_argerror(E->L, 1, "creature entry expected");
+
+        CreatureTemplate const* proto = eObjectMgr->GetCreatureTemplate(entry);
+        if (!proto)
+        {
+            lua_pushnil(E->L);
+            return 1;
+        }
+
+        lua_newtable(E->L);
+        E->PushField("Entry", proto->Entry);
+        E->PushField("Name", proto->Name);
+        E->PushField("Faction", proto->faction);
+        E->PushField("SpeedWalk", proto->speed_walk);
+        E->PushField("SpeedRun", proto->speed_run);
+        E->PushField("Family", proto->family);
+        E->PushField("Type", proto->type);
+
+        return 1;
+    }
+
     // PositionFullTerrainStatus data;
     // GetMap()->GetFullTerrainStatusForPosition(GetPhaseMask(), GetPositionX(), GetPositionY(), GetPositionZ(), data, MAP_ALL_LIQUIDS, GetCollisionHeight());
 
@@ -3225,6 +3286,8 @@ namespace LuaGlobalFunctions
         { "PrintError", &LuaGlobalFunctions::PrintError },
         { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+        { "GetItemTemplate", &LuaGlobalFunctions::GetItemTemplate },
+        { "GetCreatureTemplate", &LuaGlobalFunctions::GetCreatureTemplate },
 
         // Boolean
         { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },

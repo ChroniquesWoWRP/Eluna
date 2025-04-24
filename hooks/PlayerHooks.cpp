@@ -171,6 +171,14 @@ void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnBeforeUnequip(Player* pPlayer, Item* pItem)
+{
+    START_HOOK(PLAYER_EVENT_ON_BEFORE_UNEQUIP);
+    HookPush(pPlayer);
+    HookPush(pItem);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
     START_HOOK(PLAYER_EVENT_ON_UNEQUIP);
@@ -181,14 +189,24 @@ void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-bool Eluna::OnBeforeAddItem(Player* pPlayer, uint32 ItemID, uint32 Class, uint32 Subclass)
+// bool Eluna::OnAddItem(Player* pPlayer, Item* pItem, uint32 bag, uint32 slot)
+// {
+//     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_ADD_ITEM, true);
+//     HookPush(pPlayer);
+//     HookPush(pItem);
+//     HookPush(count);
+//     // HookPush(Subclass);
+//     // HookPush(buycount);
+//     return CallAllFunctionsBool(PlayerEventBindings, key, true);
+// }
+
+void Eluna::OnDestroyItem(Player* pPlayer, Item* pItem, uint32 count)
 {
-    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_BEFORE_ADD_ITEM, true);
+    START_HOOK(PLAYER_EVENT_ON_DESTROY_ITEM);
     HookPush(pPlayer);
-    HookPush(ItemID);
-    HookPush(Class);
-    HookPush(Subclass);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    HookPush(pItem);
+    HookPush(count);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
@@ -201,7 +219,7 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 1);
+        int r = CallOneFunction(n--, 1, 1);
 
         if (lua_isnumber(L, r))
             result = (InventoryResult)CHECKVAL<uint32>(r);
@@ -209,7 +227,7 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
         lua_pop(L, 1);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(1);
     return result;
 }
 void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)

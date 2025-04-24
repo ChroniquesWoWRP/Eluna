@@ -1330,6 +1330,19 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns the [Player]s currently selected [Unit] object
+     *
+     * @return [Unit] unit
+     */
+    int SetSelection(Eluna* E, Player* player)
+    {
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
+
+        player->SetSelection(guid);
+        return 0;
+    }
+
+    /**
      * Returns the [Player]s GM Rank
      *
      * @return [AccountTypes] gmRank
@@ -4005,6 +4018,7 @@ namespace LuaPlayer
 
 
         // Custom
+        { "SetSelection", &LuaPlayer::SetSelection },
         { "RunCommand", &LuaPlayer::RunCommand }
     };
 };
