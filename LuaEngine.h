@@ -398,6 +398,7 @@ public:
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
     bool OnCanEquipItem(Player* pPlayer, Item* pItem);
+    bool OnCanUnequipItem(Player* pPlayer, Item* pItem);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
@@ -418,7 +419,10 @@ public:
         void OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
         void OnBeforeUnequip(Player* pPlayer, Item* pItem);
         void OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState);
-        void OnDestroyItem(Player* pPlayer, Item* pItem, uint32 count);
+        void OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count);
+        void OnAddItem(Player* pPlayer, Item* pItem);
+        bool OnUseBarber(Player* pPlayer, GameObject *pGo);
+        bool OnBeforeAddItem(Player const* pPlayer, uint32 entry, uint32 count, bool isNew);
     /* ###< Custom ### */
 
     /* Item */

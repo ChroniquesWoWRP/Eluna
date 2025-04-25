@@ -161,6 +161,14 @@ bool Eluna::OnCanEquipItem(Player* pPlayer, Item* pItem)
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
+bool Eluna::OnCanUnequipItem(Player* pPlayer, Item* pItem)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_UNEQUIP, true);
+    HookPush(pPlayer);
+    HookPush(pItem);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
     START_HOOK(PLAYER_EVENT_ON_EQUIP);
@@ -189,22 +197,37 @@ void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-// bool Eluna::OnAddItem(Player* pPlayer, Item* pItem, uint32 bag, uint32 slot)
-// {
-//     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_ADD_ITEM, true);
-//     HookPush(pPlayer);
-//     HookPush(pItem);
-//     HookPush(count);
-//     // HookPush(Subclass);
-//     // HookPush(buycount);
-//     return CallAllFunctionsBool(PlayerEventBindings, key, true);
-// }
+void Eluna::OnAddItem(Player* pPlayer, Item* pItem)
+{
+    START_HOOK(PLAYER_EVENT_ON_ADD_ITEM);
+    HookPush(pPlayer);
+    HookPush(pItem);
+    CallAllFunctions(PlayerEventBindings, key);
+}
 
-void Eluna::OnDestroyItem(Player* pPlayer, Item* pItem, uint32 count)
+bool Eluna::OnUseBarber(Player* pPlayer, GameObject *pGo)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_USE_BARBER, true);
+    HookPush(pPlayer);
+    HookPush(pGo);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
+bool Eluna::OnBeforeAddItem(Player const* pPlayer, uint32 entry, uint32 count, bool isNew)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_BEFORE_ADD_ITEM, true);
+    HookPush(pPlayer);
+    HookPush(entry);
+    HookPush(count);
+    HookPush(isNew);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
+void Eluna::OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count)
 {
     START_HOOK(PLAYER_EVENT_ON_DESTROY_ITEM);
     HookPush(pPlayer);
-    HookPush(pItem);
+    HookPush(entry);
     HookPush(count);
     CallAllFunctions(PlayerEventBindings, key);
 }
