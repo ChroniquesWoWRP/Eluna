@@ -417,11 +417,12 @@ public:
     void OnDiscoverArea(Player* player, uint32 area);
     /* ###> Custom ### */
         void OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
-        void OnBeforeUnequip(Player* pPlayer, Item* pItem);
+        void OnUnequipEnded(Player* pPlayer);
+        // void OnBeforeUnequip(Player* pPlayer, Item* pItem);
         void OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState);
         void OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count);
         void OnAddItem(Player* pPlayer, Item* pItem);
-        bool OnUseBarber(Player* pPlayer, GameObject *pGo);
+        bool OnUseBarber(Player* pPlayer, GameObject *pGo, bool isEnding);
         bool OnBeforeAddItem(Player const* pPlayer, uint32 entry, uint32 count, bool isNew);
     /* ###< Custom ### */
 

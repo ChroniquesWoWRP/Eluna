@@ -3148,6 +3148,8 @@ namespace LuaGlobalFunctions
     int GetItemTemplate(Eluna* E)
     {
         uint32 entry = E->CHECKVAL<uint32>(1);
+        uint8 localeIdx = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+
         if (!entry)
             return luaL_argerror(E->L, 1, "item entry expected");
 
@@ -3158,11 +3160,24 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
+        std::string name = proto->Name1;
+        std::string description = proto->Description;
+        if (localeIdx != DEFAULT_LOCALE)
+        {
+            if (ItemLocale const* cl = sObjectMgr->GetItemLocale(proto->ItemId)) {
+                if (cl->Name.size() > localeIdx && !cl->Name[localeIdx].empty())
+                    name = cl->Name[localeIdx];
+                if (cl->Description.size() > localeIdx && !cl->Description[localeIdx].empty())
+                    description = cl->Name[localeIdx];
+            }
+        }
+
+
         lua_newtable(E->L);
         E->PushField("ItemId", proto->ItemId);
         E->PushField("Class", proto->Class);
         E->PushField("SubClass", proto->SubClass);
-        E->PushField("Name", proto->Name1);
+        E->PushField("Name", name);
         E->PushField("Quality", proto->Quality);
         E->PushField("BuyCount", proto->BuyCount);
         E->PushField("BuyPrice", proto->BuyPrice);
@@ -3176,6 +3191,7 @@ namespace LuaGlobalFunctions
         E->PushField("DamageType", proto->Damage[0].DamageType);
         E->PushField("Armor", proto->Armor);
         E->PushField("MaxDurability", proto->MaxDurability);
+        E->PushField("Description", description);
 
         return 1;
     }

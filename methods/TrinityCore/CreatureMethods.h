@@ -1422,6 +1422,27 @@ namespace LuaCreature
             E->Push(creature->GetNameForLocaleIdx(static_cast<LocaleConstant>(locale)));
             return 1;
         }
+
+        /**
+         * Returns the name of the [WorldObject]
+         *
+         * @return string name
+         */
+        int GetEquipedItems(Eluna *E, Creature *creature)
+        {
+            uint8 equipmentId = creature->GetCurrentEquipmentId();
+
+            if (equipmentId == 0) {
+                lua_pushnil(E->L);
+                return 1;
+            }
+
+            lua_newtable(E->L);
+            E->PushField("MainHand", creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0));
+            E->PushField("OffHand", creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1));
+            E->PushField("Ranged", creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2));
+            return 1;
+        }
     /** ###< CUSTOM METHODS ### */
 
     ElunaRegister<Creature> CreatureMethods[] =
@@ -1528,6 +1549,7 @@ namespace LuaCreature
 
         // ###> Custom ###
         { "GetNameLocale", &LuaCreature::GetNameLocale },
+        { "GetEquipedItems", &LuaCreature::GetEquipedItems },
         // ###< Custom ###
     };
 };
