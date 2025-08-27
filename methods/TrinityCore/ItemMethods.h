@@ -809,6 +809,44 @@ namespace LuaItem
         return 1;
     }
     // ###< Custom ###
+
+    /**
+     * Returns the max durability of this [Item]
+     *
+     * @return uint32 maxDurability
+     */
+    int GetMaxDurability(Eluna* E, Item* item)
+    {
+        E->Push(item->GetUInt32Value(ITEM_FIELD_MAXDURABILITY));
+        return 1;
+    }
+
+    /**
+     * Returns the current durability of this [Item]
+     *
+     * @return uint32 durabiliy
+     */
+    int GetDurability(Eluna* E, Item* item)
+    {
+        E->Push(item->GetUInt32Value(ITEM_FIELD_DURABILITY));
+        return 1;
+    }
+
+    /**
+     * Returns the current durability of this [Item]
+     *
+     * @return uint32 durabiliy
+     */
+    int SetDurability(Eluna* E, Item* item)
+    {
+        uint32 maxDurability = item->GetUInt32Value(ITEM_FIELD_MAXDURABILITY);
+        uint32 durability = E->CHECKVAL<uint32>(2, 0);
+
+        if (durability > maxDurability) return luaL_argerror(E->L, 2, "durability value cannot exceed max durability item");
+
+        item->SetUInt32Value(ITEM_FIELD_DURABILITY, durability);
+        return 0;
+    }
     
     ElunaRegister<Item> ItemMethods[] =
     {
@@ -881,6 +919,9 @@ namespace LuaItem
         { "GetArmor", &LuaItem::GetArmor },
         { "GetMinDamage", &LuaItem::GetMinDamage },
         { "GetMaxDamage", &LuaItem::GetMaxDamage },
+        { "GetDurability", &LuaItem::GetDurability },
+        { "GetMaxDurability", &LuaItem::GetMaxDurability },
+        { "SetDurability", &LuaItem::SetDurability },
     };
 };
 #endif

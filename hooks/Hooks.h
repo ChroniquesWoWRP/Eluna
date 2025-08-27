@@ -223,11 +223,12 @@ namespace Hooks
         PLAYER_EVENT_ON_STAND_STATE_CHANGED     =     58,       // (event, player, previousState, newState)
         PLAYER_EVENT_ON_CAN_EQUIP               =     59,       // (event, player, item)
         PLAYER_EVENT_ON_DESTROY_ITEM            =     61,       // (event, player, entry, count)
-        PLAYER_EVENT_ON_BEFORE_UNEQUIP          =     62,       // (event, player, item)
+        // PLAYER_EVENT_ON_BEFORE_UNEQUIP          =     62,       // (event, player, item)
         PLAYER_EVENT_ON_ADD_ITEM                =     63,       // (event, player, item)
         PLAYER_EVENT_ON_USE_BARBER              =     64,       // (event, player, gameobject)
         PLAYER_EVENT_ON_BEFORE_ADD_ITEM         =     65,       // (event, player, entry, count, swap)
         PLAYER_EVENT_ON_CAN_UNEQUIP             =     66,       // (event, player, item)
+        PLAYER_EVENT_ON_UNEQUIP_ENDED           =     67,       // (event, player)
 
         PLAYER_EVENT_COUNT
     };

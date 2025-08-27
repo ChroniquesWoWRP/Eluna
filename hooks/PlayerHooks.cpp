@@ -179,13 +179,13 @@ void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-void Eluna::OnBeforeUnequip(Player* pPlayer, Item* pItem)
-{
-    START_HOOK(PLAYER_EVENT_ON_BEFORE_UNEQUIP);
-    HookPush(pPlayer);
-    HookPush(pItem);
-    CallAllFunctions(PlayerEventBindings, key);
-}
+// void Eluna::OnBeforeUnequip(Player* pPlayer, Item* pItem)
+// {
+//     START_HOOK(PLAYER_EVENT_ON_BEFORE_UNEQUIP);
+//     HookPush(pPlayer);
+//     HookPush(pItem);
+//     CallAllFunctions(PlayerEventBindings, key);
+// }
 
 void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
@@ -197,6 +197,13 @@ void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnUnequipEnded(Player* pPlayer)
+{
+    START_HOOK(PLAYER_EVENT_ON_UNEQUIP_ENDED);
+    HookPush(pPlayer);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnAddItem(Player* pPlayer, Item* pItem)
 {
     START_HOOK(PLAYER_EVENT_ON_ADD_ITEM);
@@ -205,11 +212,12 @@ void Eluna::OnAddItem(Player* pPlayer, Item* pItem)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-bool Eluna::OnUseBarber(Player* pPlayer, GameObject *pGo)
+bool Eluna::OnUseBarber(Player* pPlayer, GameObject *pGo, bool isEnding)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_USE_BARBER, true);
     HookPush(pPlayer);
     HookPush(pGo);
+    HookPush(isEnding);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
