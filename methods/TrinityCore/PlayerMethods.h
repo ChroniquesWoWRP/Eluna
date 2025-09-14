@@ -1582,6 +1582,12 @@ namespace LuaPlayer
         return 1;
     }
 
+    int GetSheath(Eluna* E, Player* player)
+    {
+        E->Push(player->GetSheath());
+        return 1;
+    }
+
     /**
      * Locks the player controls and disallows all movement and casting.
      *
@@ -4019,7 +4025,8 @@ namespace LuaPlayer
 
         // Custom
         { "SetSelection", &LuaPlayer::SetSelection },
-        { "RunCommand", &LuaPlayer::RunCommand }
+        { "RunCommand", &LuaPlayer::RunCommand },
+        { "GetSheath", &LuaPlayer::GetSheath }
     };
 };
 #endif

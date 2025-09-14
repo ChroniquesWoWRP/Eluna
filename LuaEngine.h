@@ -10,6 +10,7 @@
 #include "Common.h"
 #include "ElunaUtility.h"
 #include "Hooks.h"
+#include "LuaEngine/snapshots/PlayerItemSnapshot.h"
 
 #if !defined ELUNA_CMANGOS
 #include "DBCEnums.h"
@@ -420,7 +421,8 @@ public:
         void OnUnequipEnded(Player* pPlayer);
         // void OnBeforeUnequip(Player* pPlayer, Item* pItem);
         void OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState);
-        void OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count);
+        // void OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count);
+        void OnDestroyItem(Player* pPlayer, Snapshots::PlayerItemSnapshot snapshot);
         void OnAddItem(Player* pPlayer, Item* pItem);
         bool OnUseBarber(Player* pPlayer, GameObject *pGo, bool isEnding);
         bool OnBeforeAddItem(Player const* pPlayer, uint32 entry, uint32 count, bool isNew);

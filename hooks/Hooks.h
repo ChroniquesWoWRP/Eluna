@@ -222,7 +222,7 @@ namespace Hooks
         PLAYER_EVENT_ON_UNEQUIP                 =     57,       // (event, player, item, bag, slot)
         PLAYER_EVENT_ON_STAND_STATE_CHANGED     =     58,       // (event, player, previousState, newState)
         PLAYER_EVENT_ON_CAN_EQUIP               =     59,       // (event, player, item)
-        PLAYER_EVENT_ON_DESTROY_ITEM            =     61,       // (event, player, entry, count)
+        PLAYER_EVENT_ON_DESTROY_ITEM            =     61,       // (event, player, entry, count, durability)
         // PLAYER_EVENT_ON_BEFORE_UNEQUIP          =     62,       // (event, player, item)
         PLAYER_EVENT_ON_ADD_ITEM                =     63,       // (event, player, item)
         PLAYER_EVENT_ON_USE_BARBER              =     64,       // (event, player, gameobject)

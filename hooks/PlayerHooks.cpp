@@ -13,6 +13,7 @@
 #include "ElunaLoader.h"
 #include <algorithm> // std::transform
 #include <cstdlib> // strtol
+#include "LuaEngine/snapshots/PlayerItemSnapshot.h"
 
 using namespace Hooks;
 
@@ -231,12 +232,22 @@ bool Eluna::OnBeforeAddItem(Player const* pPlayer, uint32 entry, uint32 count, b
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
-void Eluna::OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count)
+// void Eluna::OnDestroyItem(Player* pPlayer, uint32 entry, uint32 count)
+// {
+//     START_HOOK(PLAYER_EVENT_ON_DESTROY_ITEM);
+//     HookPush(pPlayer);
+//     HookPush(entry);
+//     HookPush(count);
+//     CallAllFunctions(PlayerEventBindings, key);
+// }
+
+void Eluna::OnDestroyItem(Player* pPlayer, Snapshots::PlayerItemSnapshot snapshot)
 {
     START_HOOK(PLAYER_EVENT_ON_DESTROY_ITEM);
     HookPush(pPlayer);
-    HookPush(entry);
-    HookPush(count);
+    HookPush(snapshot.entry);
+    HookPush(snapshot.count);
+    HookPush(snapshot.durability);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
