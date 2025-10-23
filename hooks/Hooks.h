@@ -87,6 +87,7 @@ namespace Hooks
         REGTYPE_BG,
         REGTYPE_MAP,
         REGTYPE_INSTANCE,
+        REGTYPE_GLOBAL,
         REGTYPE_COUNT
     };
 
@@ -229,6 +230,7 @@ namespace Hooks
         PLAYER_EVENT_ON_BEFORE_ADD_ITEM         =     65,       // (event, player, entry, count, swap)
         PLAYER_EVENT_ON_CAN_UNEQUIP             =     66,       // (event, player, item)
         PLAYER_EVENT_ON_UNEQUIP_ENDED           =     67,       // (event, player)
+        PLAYER_EVENT_ON_JUST_DIED               =     68,       // (event, player)
 
         PLAYER_EVENT_COUNT
     };
@@ -386,6 +388,14 @@ namespace Hooks
         INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
         INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
         INSTANCE_EVENT_COUNT
+    };
+
+    
+    enum GlobalEvents
+    {
+        GLOBAL_EVENT_ON_CREATURE_REMOVE                  = 1,    // (event, creature)
+        GLOBAL_EVENT_ON_CREATURE_ADD                     = 2,    // (event, creature)
+        GLOBAL_EVENT_COUNT
     };
 
 };

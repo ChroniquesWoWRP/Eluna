@@ -2055,11 +2055,12 @@ namespace LuaUnit
     int SendUnitEmote(Eluna* E, Unit* unit)
     {
         const char* msg = E->CHECKVAL<const char*>(2);
-        Unit* receiver = E->CHECKOBJ<Unit>(3, false);
-        bool bossEmote = E->CHECKVAL<bool>(4, false);
+        float radius = E->CHECKVAL<float>(3, 0);
+        Unit* receiver = E->CHECKOBJ<Unit>(4, false);
+        bool bossEmote = E->CHECKVAL<bool>(5, false);
 
         if (std::string(msg).length() > 0)
-            unit->TextEmote(msg, receiver, bossEmote);
+            unit->TextEmote(msg, radius, receiver, bossEmote);
 
         return 0;
     }
@@ -2074,9 +2075,10 @@ namespace LuaUnit
     {
         const char* msg = E->CHECKVAL<const char*>(2);
         uint32 language = E->CHECKVAL<uint32>(3);
+        float radius = E->CHECKVAL<float>(4, 0);
 
         if (std::string(msg).length() > 0)
-            unit->Say(msg, (Language)language, unit);
+            unit->Say(msg, (Language)language, radius, unit);
 
         return 0;
     }
@@ -2091,9 +2093,10 @@ namespace LuaUnit
     {
         const char* msg = E->CHECKVAL<const char*>(2);
         uint32 language = E->CHECKVAL<uint32>(3);
+        float radius = E->CHECKVAL<float>(4, 0);
 
         if (std::string(msg).length() > 0)
-            unit->Yell(msg, (Language)language, unit);
+            unit->Yell(msg, (Language)language, radius, unit);
 
         return 0;
     }

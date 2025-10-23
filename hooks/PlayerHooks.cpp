@@ -795,4 +795,11 @@ void Eluna::OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newSt
     HookPush(newState);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnJustDied(Player* player)
+{
+    START_HOOK(PLAYER_EVENT_ON_JUST_DIED);
+    HookPush(player);
+    CallAllFunctions(PlayerEventBindings, key);
+}
 // ###< Custom ###

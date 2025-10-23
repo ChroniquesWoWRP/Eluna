@@ -682,6 +682,11 @@ namespace LuaGlobalFunctions
         return RegisterEventHelper(E, Hooks::REGTYPE_SERVER);
     }
 
+    int RegisterGlobalEvent(Eluna* E)
+    {
+        return RegisterEventHelper(E, Hooks::REGTYPE_GLOBAL);
+    }
+
     /**
      * Registers a [Player] event handler.
      *
@@ -3221,6 +3226,26 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int GetGameObjectTemplate(Eluna* E)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        if (!entry)
+            return luaL_argerror(E->L, 1, "gameobject entry expected");
+
+        GameObjectTemplate const* proto = eObjectMgr->GetGameObjectTemplate(entry);
+        if (!proto)
+        {
+            lua_pushnil(E->L);
+            return 1;
+        }
+
+        lua_newtable(E->L);
+        E->PushField("Entry", proto->entry);
+        E->PushField("Name", proto->name);
+
+        return 1;
+    }
+
     // PositionFullTerrainStatus data;
     // GetMap()->GetFullTerrainStatusForPosition(GetPhaseMask(), GetPositionX(), GetPositionY(), GetPositionZ(), data, MAP_ALL_LIQUIDS, GetCollisionHeight());
 
@@ -3244,6 +3269,7 @@ namespace LuaGlobalFunctions
         { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
         { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
         { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
+        { "RegisterGlobalEvent", &LuaGlobalFunctions::RegisterGlobalEvent },
 
         { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
         { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
@@ -3304,6 +3330,7 @@ namespace LuaGlobalFunctions
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
         { "GetItemTemplate", &LuaGlobalFunctions::GetItemTemplate },
         { "GetCreatureTemplate", &LuaGlobalFunctions::GetCreatureTemplate },
+        { "GetGameObjectTemplate", &LuaGlobalFunctions::GetGameObjectTemplate },
 
         // Boolean
         { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },

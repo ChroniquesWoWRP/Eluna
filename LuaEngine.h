@@ -253,6 +253,7 @@ public:
     BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
     BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
     BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
+    BindingMap< EventKey<Hooks::GlobalEvents> >*   GlobalEventBindings;
 
     BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
     BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
@@ -540,6 +541,7 @@ public:
     // ###> Custom ###
         void OnBuyItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
         void OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
+        void OnJustDied(Player* player);
     // ###< Custom ###
     
 
@@ -630,6 +632,10 @@ public:
 
     /* Spell */
     void OnSpellCast(Spell* pSpell, bool skipCheck);
+
+    /* Global */
+    void OnCreatureRemove(Creature* creature);
+    void OnCreatureAdd(Creature* creature);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);

@@ -613,6 +613,31 @@ namespace LuaItem
     }
 
     /**
+     * Returns the stat info of the specified stat slot of this [Item]
+     *
+     * @param uint8 statSlot : the stat slot specified
+     * @return int32 statValue
+     * @return int32 statType
+     */
+    int GetStatInfo(Eluna* E, Item* item)
+    {
+        uint8 statSlot = E->CHECKVAL<uint8>(2);
+        int32 statValue = 0;
+        int32 statType = 0;
+
+        if (statSlot > 0 && statSlot <= item->GetTemplate()->StatsCount)
+        {
+            auto& statEntry = item->GetTemplate()->ItemStat[statSlot - 1];
+            statValue = statEntry.ItemStatValue;
+            statType = statEntry.ItemStatType;
+        }
+
+        E->Push(statValue);
+        E->Push(statType);
+        return 2;
+    }
+
+    /**
      * Returns the random property ID of this [Item]
      *
      * @return uint32 randomPropertyId
@@ -879,6 +904,7 @@ namespace LuaItem
         { "GetItemLevel", &LuaItem::GetItemLevel },
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
         { "GetStatsCount", &LuaItem::GetStatsCount },
+        { "GetStatInfo", &LuaItem::GetStatInfo },
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
         { "GetItemSet", &LuaItem::GetItemSet },

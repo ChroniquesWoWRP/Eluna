@@ -73,6 +73,7 @@ ItemGossipBindings(NULL),
 PlayerGossipBindings(NULL),
 MapEventBindings(NULL),
 InstanceEventBindings(NULL),
+GlobalEventBindings(NULL),
 
 CreatureUniqueBindings(NULL)
 {
@@ -190,6 +191,7 @@ void Eluna::CreateBindStores()
     GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
     VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
     BGEventBindings          = new BindingMap< EventKey<Hooks::BGEvents> >(L);
+    GlobalEventBindings      = new BindingMap< EventKey<Hooks::GlobalEvents> >(L);
 
     PacketEventBindings      = new BindingMap< EntryKey<Hooks::PacketEvents> >(L);
     CreatureEventBindings    = new BindingMap< EntryKey<Hooks::CreatureEvents> >(L);
@@ -226,6 +228,7 @@ void Eluna::DestroyBindStores()
     delete BGEventBindings;
     delete MapEventBindings;
     delete InstanceEventBindings;
+    delete GlobalEventBindings;
 
     delete CreatureUniqueBindings;
 
@@ -247,6 +250,8 @@ void Eluna::DestroyBindStores()
     BGEventBindings = NULL;
     MapEventBindings = NULL;
     InstanceEventBindings = NULL;
+
+    GlobalEventBindings = NULL;
 
     CreatureUniqueBindings = NULL;
 }
@@ -735,6 +740,16 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 
     switch (regtype)
     {
+        case Hooks::REGTYPE_GLOBAL:
+            if (event_id < Hooks::GLOBAL_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::GlobalEvents>((Hooks::GlobalEvents)event_id);
+                bindingID = GlobalEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, GlobalEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
         case Hooks::REGTYPE_SERVER:
             if (event_id < Hooks::SERVER_EVENT_COUNT)
             {

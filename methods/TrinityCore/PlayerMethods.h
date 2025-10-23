@@ -2763,8 +2763,9 @@ namespace LuaPlayer
     int TextEmote(Eluna* E, Player* player)
     {
         std::string text = E->CHECKVAL<std::string>(2);
+        float radius = E->CHECKVAL<float>(4, 0);
 
-        player->TextEmote(text);
+        player->TextEmote(text, radius);
         return 0;
     }
 
@@ -2778,8 +2779,9 @@ namespace LuaPlayer
     {
         std::string text = E->CHECKVAL<std::string>(2);
         uint32 lang = E->CHECKVAL<uint32>(3);
+        float radius = E->CHECKVAL<float>(4, 0);
 
-        player->Yell(text, (Language)lang);
+        player->Yell(text, (Language)lang, radius);
         return 0;
     }
 
@@ -2793,8 +2795,9 @@ namespace LuaPlayer
     {
         std::string text = E->CHECKVAL<std::string>(2);
         uint32 lang = E->CHECKVAL<uint32>(3);
+        float radius = E->CHECKVAL<float>(4, 0);
 
-        player->Say(text, (Language)lang);
+        player->Say(text, (Language)lang, radius);
         return 0;
     }
 
